@@ -17,7 +17,7 @@ def generate_heightmap(size, octaves):
 
 
 def show_map():
-    heightmap = generate_heightmap(2048, 4)
+    heightmap = generate_heightmap(128, 4)
 
     plt.figure(figsize=(6, 6))
 
