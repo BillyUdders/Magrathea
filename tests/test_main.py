@@ -1,11 +1,7 @@
 import os
 import unittest
-import sys
 
-# Add the parent directory to sys.path to allow importing main
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from main import render_map_to_png, render_map_to_buffer
+from magrathea.main import render_map_to_png, render_map_to_buffer
 
 class TestMapRendering(unittest.TestCase):
     def test_render_png(self):

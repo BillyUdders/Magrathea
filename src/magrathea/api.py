@@ -2,7 +2,7 @@ import uuid
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from main import render_map_to_buffer
+from .main import render_map_to_buffer
 
 app = FastAPI()
 

@@ -1,6 +1,6 @@
 import unittest
 from fastapi.testclient import TestClient
-from api import app
+from magrathea.api import app
 
 class TestMapAPI(unittest.TestCase):
     def setUp(self):
