@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from magrathea.main import Base
+from magrathea.database import Base
 from magrathea.maps.map import Map
 
 

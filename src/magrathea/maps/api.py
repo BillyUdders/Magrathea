@@ -11,7 +11,7 @@ from magrathea.database import get_db
 from magrathea.maps.map import Map
 from magrathea.maps.rendering_engine import render_map_to_buffer
 
-router = APIRouter()
+map_router = APIRouter()
 
 
 class MapRequest(BaseModel):
@@ -24,8 +24,8 @@ class MapResponse(BaseModel):
     url: str
 
 
-@router.post("/maps", response_model=MapResponse)
-def create_map(request: MapRequest, db: Session = Depends(get_db)) -> dict[str, str]:  # noqa: B008
+@map_router.post("/maps", response_model=MapResponse)
+def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapResponse:  # noqa: B008
     """Generates a map and stores it in the database."""
     logger.info(f"POST /maps: size={request.size}, octaves={request.octaves}")
     try:
@@ -45,13 +45,13 @@ def create_map(request: MapRequest, db: Session = Depends(get_db)) -> dict[str, 
         db.refresh(new_map)
 
         logger.info(f"Map created successfully. ID: {map_id}")
-        return {"id": map_id, "url": f"/maps/{map_id}"}
+        return MapResponse(id=map_id, url=f"/maps/{map_id}")
     except Exception as e:
         logger.error(f"Failed to create map: {e}")
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-@router.get("/maps/{map_id}")
+@map_router.get("/maps/{map_id}")
 def get_map(map_id: str, db: Session = Depends(get_db)) -> StreamingResponse:  # noqa: B008
     """Retrieves a generated map by ID."""
     logger.debug(f"Retrieving map with ID: {map_id}")
