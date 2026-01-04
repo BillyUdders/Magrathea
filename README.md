@@ -1,5 +1,8 @@
 # Magrathea
 
+[![CI](https://github.com/BillyUdders/Magrathea/actions/workflows/ci.yml/badge.svg)](https://github.com/BillyUdders/Magrathea/actions/workflows/ci.yml)
+[![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/release/python-3130/)
+
 Magrathea is a FastAPI-based map generation service. It generates procedural maps and stores them in a local SQLite database.
 
 ## Features
