@@ -30,7 +30,7 @@ Magrathea is a FastAPI-based map generation service. It generates procedural map
 ### Running the Application
 Start the FastAPI server using `uv`:
 ```bash
-uv run uvicorn magrathea.api:app --reload
+uv run uvicorn magrathea.main:app --reload
 ```
 The API will be available at `http://127.0.0.1:8000`.
 

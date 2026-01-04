@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from magrathea.rendering_engine import render_map_to_buffer, render_map_to_png
+from magrathea.maps.rendering_engine import render_map_to_buffer, render_map_to_png
 
 
 def test_render_png(tmp_path: Path) -> None:
