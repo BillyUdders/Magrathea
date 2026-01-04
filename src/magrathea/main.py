@@ -19,12 +19,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 app = FastAPI(lifespan=lifespan)
 app.include_router(router)
 
-# Mount static files
 static_path = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_path):
     app.mount("/static", StaticFiles(directory=static_path), name="static")
-else
+else:
     raise FileNotFoundError(f"Static files not found at: {static_path}.")
+
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon() -> FileResponse:
