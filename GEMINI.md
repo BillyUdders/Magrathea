@@ -73,6 +73,10 @@ We use `pytest` for testing.
 - **API Documentation**: Ensure all FastAPI endpoints have clear type hints and docstrings; they are automatically documented via Swagger at `/docs`.
 
 - **Database**: Use SQLAlchemy for all database operations. Avoid raw SQL where possible.
+    - **Migrations**: Use Alembic for all schema changes.
+    - **Apply**: `uv run alembic upgrade head`
+    - **Create**: `uv run alembic revision --autogenerate -m "..."`
+    - **Note**: The app does not create tables on startup. You must run migrations manually.
 
 - **Dependencies**: Always use `uv sync` to keep the environment updated and `uv add <package>` to add new dependencies.
 

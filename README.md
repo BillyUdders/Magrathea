@@ -56,6 +56,19 @@ Once the server is running, you can access the interactive API documentation at:
 
 ## Development
 
+### Database Migrations (Alembic)
+This project uses Alembic for database migrations. The database schema is not automatically created on startup; you must use Alembic to manage it.
+
+#### Common Commands
+| Action | Command |
+| :--- | :--- |
+| **Apply all migrations** | `uv run alembic upgrade head` |
+| **Create a new migration** | `uv run alembic revision --autogenerate -m "message"` |
+| **Downgrade last change** | `uv run alembic downgrade -1` |
+| **Check migration status** | `uv run alembic current` |
+
+**Setup Note:** If you delete `magrathea.db`, run `uv run alembic upgrade head` to recreate the database and tables.
+
 ### Pre-commit Hooks (prek)
 This project uses `prek` to ensure code quality. To set it up:
 ```bash
