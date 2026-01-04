@@ -7,7 +7,7 @@ from matplotlib.figure import Figure
 from perlin_noise import PerlinNoise
 
 
-def generate_heightmap(size, octaves):
+def generate_heightmap(size: int, octaves: int) -> np.ndarray:
     logger.debug(f"Generating heightmap: size={size}, octaves={octaves}")
     noise = PerlinNoise(octaves=octaves)
     data = np.zeros((size, size))
@@ -21,7 +21,7 @@ def generate_heightmap(size, octaves):
     return data
 
 
-def create_figure(heightmap):
+def create_figure(heightmap: np.ndarray) -> Figure:
     fig = Figure(figsize=(6, 6))
     ax = fig.subplots()
 
@@ -33,7 +33,7 @@ def create_figure(heightmap):
     return fig
 
 
-def render_map_to_png(size, octaves, filename):
+def render_map_to_png(size: int, octaves: int, filename: str) -> None:
     logger.info(f"Rendering map to file: {filename} (size={size}, octaves={octaves})")
     heightmap = generate_heightmap(size, octaves)
     fig = create_figure(heightmap)
@@ -41,7 +41,7 @@ def render_map_to_png(size, octaves, filename):
     logger.success(f"Map saved to {filename}")
 
 
-def render_map_to_buffer(size, octaves):
+def render_map_to_buffer(size: int, octaves: int) -> io.BytesIO:
     logger.info(f"Rendering map to buffer (size={size}, octaves={octaves})")
     heightmap = generate_heightmap(size, octaves)
     fig = create_figure(heightmap)

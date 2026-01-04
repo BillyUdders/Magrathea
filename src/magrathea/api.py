@@ -1,5 +1,6 @@
 import io
 import uuid
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -13,7 +14,7 @@ from .rendering_engine import render_map_to_buffer
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     init_db()
     yield
 
@@ -32,11 +33,9 @@ class MapResponse(BaseModel):
 
 
 @app.post("/maps", response_model=MapResponse)
-def create_map(request: MapRequest, db: Session = Depends(get_db)):
+def create_map(request: MapRequest, db: Session = Depends(get_db)) -> dict[str, str]:  # noqa: B008
     """Generates a map and stores it in the database."""
-    logger.info(
-        f"Received request to create map: size={request.size}, octaves={request.octaves}"
-    )
+    logger.info(f"POST /maps: size={request.size}, octaves={request.octaves}")
     try:
         # Generate the map buffer
         buf = render_map_to_buffer(request.size, request.octaves)
@@ -57,11 +56,11 @@ def create_map(request: MapRequest, db: Session = Depends(get_db)):
         return {"id": map_id, "url": f"/maps/{map_id}"}
     except Exception as e:
         logger.error(f"Failed to create map: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/maps/{map_id}")
-def get_map(map_id: str, db: Session = Depends(get_db)):
+def get_map(map_id: str, db: Session = Depends(get_db)) -> StreamingResponse:  # noqa: B008
     """Retrieves a generated map by ID."""
     logger.debug(f"Retrieving map with ID: {map_id}")
 
@@ -72,6 +71,7 @@ def get_map(map_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Map not found")
 
     # Create buffer from binary data
+    assert map_record.data is not None
     buf = io.BytesIO(map_record.data)
 
     # Return as streaming response

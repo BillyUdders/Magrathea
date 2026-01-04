@@ -1,4 +1,5 @@
 import os
+
 from magrathea.rendering_engine import render_map_to_buffer, render_map_to_png
 
 

@@ -1,7 +1,11 @@
-from sqlalchemy import create_engine, String, Integer, LargeBinary
-from sqlalchemy.orm import declarative_base, sessionmaker, Mapped, mapped_column
+from collections.abc import Generator
 
-Base = declarative_base()
+from sqlalchemy import Integer, LargeBinary, String, create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class Map(Base):
@@ -20,11 +24,11 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def init_db():
+def init_db() -> None:
     Base.metadata.create_all(bind=engine)
 
 
-def get_db():
+def get_db() -> Generator[Session]:
     db = SessionLocal()
     try:
         yield db

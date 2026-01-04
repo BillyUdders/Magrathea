@@ -51,6 +51,24 @@ Once the server is running, you can access the interactive API documentation at:
 6. Paste the `id` from the previous step into the `map_id` field.
 7. Click **Execute**. The response body will contain the generated image, and you can see a preview in the "Response body" section of Swagger.
 
+## Development
+
+### Pre-commit Hooks
+This project uses `pre-commit` to ensure code quality. To set it up:
+```bash
+uv run pre-commit install
+```
+The hooks will run automatically on every commit. You can also run them manually:
+```bash
+uv run pre-commit run --all-files
+```
+
+### Type Checking
+To run static type checking with `mypy`:
+```bash
+uv run mypy src
+```
+
 ## Running Tests
 To run the test suite, use `pytest`:
 ```bash
