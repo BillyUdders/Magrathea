@@ -37,11 +37,6 @@ def generate_heightmap(
         f"density={island_density}"
     )
 
-    # The noise library doesn't handle seeds directly in pnoise2 in a thread-safe
-    # standardized way for all versions, but shifting coordinates by a large random
-    # offset is a common trick. However, pnoise2 'base' parameter is often available.
-    # Let's use coordinate offsets for robustness.
-
     if seed is None:
         seed = random.randint(0, 10000)
 
