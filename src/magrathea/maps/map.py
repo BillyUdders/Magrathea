@@ -10,4 +10,5 @@ class Map(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, index=True)
     size: Mapped[int] = mapped_column(Integer)
     octaves: Mapped[int] = mapped_column(Integer)
+    seed: Mapped[int | None] = mapped_column(Integer, nullable=True)
     data: Mapped[bytes] = mapped_column(LargeBinary)

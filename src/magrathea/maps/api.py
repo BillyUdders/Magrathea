@@ -17,6 +17,7 @@ map_router = APIRouter()
 class MapRequest(BaseModel):
     size: int = 128
     octaves: int = 4
+    seed: int | None = None
 
 
 class MapResponse(BaseModel):
@@ -27,17 +28,24 @@ class MapResponse(BaseModel):
 @map_router.post("/maps", response_model=MapResponse)
 def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapResponse:  # noqa: B008
     """Generates a map and stores it in the database."""
-    logger.info(f"POST /maps: size={request.size}, octaves={request.octaves}")
+    logger.info(
+        f"POST /maps: size={request.size}, octaves={request.octaves}, "
+        f"seed={request.seed}"
+    )
     try:
         # Generate the map buffer
-        buf = render_map_to_buffer(request.size, request.octaves)
+        buf = render_map_to_buffer(request.size, request.octaves, seed=request.seed)
 
         # Create a unique ID
         map_id = str(uuid.uuid4())
 
         # Create DB record
         new_map = Map(
-            id=map_id, size=request.size, octaves=request.octaves, data=buf.getvalue()
+            id=map_id,
+            size=request.size,
+            octaves=request.octaves,
+            seed=request.seed,
+            data=buf.getvalue(),
         )
 
         db.add(new_map)
