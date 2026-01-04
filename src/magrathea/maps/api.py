@@ -18,6 +18,7 @@ class MapRequest(BaseModel):
     size: int = 128
     octaves: int = 4
     seed: int | None = None
+    island_density: float = 0.0
 
 
 class MapResponse(BaseModel):
@@ -30,11 +31,16 @@ def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapRespons
     """Generates a map and stores it in the database."""
     logger.info(
         f"POST /maps: size={request.size}, octaves={request.octaves}, "
-        f"seed={request.seed}"
+        f"seed={request.seed}, density={request.island_density}"
     )
     try:
         # Generate the map buffer
-        buf = render_map_to_buffer(request.size, request.octaves, seed=request.seed)
+        buf = render_map_to_buffer(
+            request.size,
+            request.octaves,
+            seed=request.seed,
+            island_density=request.island_density,
+        )
 
         # Create a unique ID
         map_id = str(uuid.uuid4())
@@ -45,6 +51,7 @@ def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapRespons
             size=request.size,
             octaves=request.octaves,
             seed=request.seed,
+            island_density=request.island_density,
             data=buf.getvalue(),
         )
 

@@ -67,6 +67,16 @@ def test_get_nonexistent_map(client: TestClient) -> None:
     assert response.status_code == 404
 
 
+def test_create_map_with_density(client: TestClient) -> None:
+    response = client.post(
+        "/maps", json={"size": 64, "octaves": 2, "island_density": 0.5}
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "id" in data
+    assert "url" in data
+
+
 def test_favicon(client: TestClient) -> None:
     response = client.get("/favicon.ico")
     assert response.status_code == 200
