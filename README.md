@@ -56,14 +56,14 @@ Once the server is running, you can access the interactive API documentation at:
 
 ## Development
 
-### Pre-commit Hooks
-This project uses `pre-commit` to ensure code quality. To set it up:
+### Pre-commit Hooks (prek)
+This project uses `prek` to ensure code quality. To set it up:
 ```bash
-uv run pre-commit install
+uv run prek install
 ```
 The hooks will run automatically on every commit. You can also run them manually:
 ```bash
-uv run pre-commit run --all-files
+uv run prek run --all-files
 ```
 
 ### Type Checking
