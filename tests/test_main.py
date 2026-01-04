@@ -5,7 +5,7 @@ import sys
 # Add the parent directory to sys.path to allow importing main
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from main import render_map_to_png
+from main import render_map_to_png, render_map_to_buffer
 
 class TestMapRendering(unittest.TestCase):
     def test_render_png(self):
@@ -21,6 +21,11 @@ class TestMapRendering(unittest.TestCase):
         # Cleanup
         if os.path.exists(filename):
             os.remove(filename)
+
+    def test_render_buffer(self):
+        buf = render_map_to_buffer(64, 2)
+        self.assertTrue(buf.getbuffer().nbytes > 0, "Buffer should contain data")
+        buf.close()
 
 if __name__ == '__main__':
     unittest.main()
