@@ -56,6 +56,25 @@ def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapRespons
         f"seed={request.seed}, density={request.island_density}"
     )
     try:
+        # Check for pre-generated map if seed is not specified
+        if request.seed is None:
+            pre_gen_map = (
+                db.query(Map)
+                .filter(
+                    Map.is_pregenerated == True,  # noqa: E712
+                    Map.size == request.size,
+                    Map.octaves == request.octaves,
+                    Map.island_density == request.island_density,
+                )
+                .first()
+            )
+
+            if pre_gen_map:
+                logger.info(f"Using pre-generated map: {pre_gen_map.id}")
+                pre_gen_map.is_pregenerated = False
+                db.commit()
+                return MapResponse(id=pre_gen_map.id, url=f"/maps/{pre_gen_map.id}")
+
         # Generate the map buffer
         buf = render_map_to_buffer(
             request.size,

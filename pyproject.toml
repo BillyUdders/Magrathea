@@ -72,3 +72,6 @@ module = [
     "alembic.*"
 ]
 ignore_missing_imports = true
+
+[project.scripts]
+seed-maps = "magrathea.maps.seed_maps:cli"

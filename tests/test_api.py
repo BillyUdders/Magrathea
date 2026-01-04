@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Generator
 
 import pytest
@@ -8,6 +9,7 @@ from sqlalchemy.pool import StaticPool
 
 from magrathea.database import Base, get_db
 from magrathea.main import app
+from magrathea.maps.map import Map
 
 # Use in-memory SQLite for tests
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -91,3 +93,33 @@ def test_favicon(client: TestClient) -> None:
         "image/vnd.microsoft.icon",
         "image/x-icon",
     ]
+
+
+def test_pregenerated_map_consumption(client: TestClient, db_session: Session) -> None:
+    # 1. Manually insert a pre-generated map
+    pre_gen_id = str(uuid.uuid4())
+    pre_gen_map = Map(
+        id=pre_gen_id,
+        size=64,
+        octaves=2,
+        seed=12345,
+        island_density=0.0,
+        data=b"fake_data",
+        is_pregenerated=True,
+    )
+    db_session.add(pre_gen_map)
+    db_session.commit()
+
+    # 2. Request a map with matching parameters (no seed)
+    response = client.post(
+        "/maps", json={"size": 64, "octaves": 2, "island_density": 0.0}
+    )
+    assert response.status_code == 200
+    data = response.json()
+
+    # 3. Verify we got the pre-generated ID
+    assert data["id"] == pre_gen_id
+
+    # 4. Verify it is no longer marked as pre-generated in DB
+    db_session.refresh(pre_gen_map)
+    assert pre_gen_map.is_pregenerated is False

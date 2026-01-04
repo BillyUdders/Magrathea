@@ -1,4 +1,4 @@
-from sqlalchemy import Float, Integer, LargeBinary, String
+from sqlalchemy import Boolean, Float, Integer, LargeBinary, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from magrathea.database import Base
@@ -12,4 +12,5 @@ class Map(Base):
     octaves: Mapped[int] = mapped_column(Integer)
     seed: Mapped[int | None] = mapped_column(Integer, nullable=True)
     island_density: Mapped[float | None] = mapped_column(Float, nullable=True)
+    is_pregenerated: Mapped[bool] = mapped_column(Boolean, default=False)
     data: Mapped[bytes] = mapped_column(LargeBinary)
