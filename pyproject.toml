@@ -13,7 +13,7 @@ dependencies = [
     "loguru>=0.7.3",
     "matplotlib>=3.10.7",
     "noise>=1.2.2",
-    "numba>=0.62.1",
+    "numba>=0.63.0",
     "numpy>=2.3.5",
     "perlin-noise>=1.14",
     "pillow>=12.0.0",
@@ -51,7 +51,7 @@ select = ["E", "F", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
 ignore = []
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
