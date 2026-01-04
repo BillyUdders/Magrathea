@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from magrathea.main import app, get_db
-from magrathea.maps.map import Base
+from magrathea.database import Base, get_db
+from magrathea.main import app
 
 # Use in-memory SQLite for tests
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

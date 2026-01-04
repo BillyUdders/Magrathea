@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, LargeBinary, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from magrathea.main import Base
+from magrathea.database import Base
 
 
 class Map(Base):

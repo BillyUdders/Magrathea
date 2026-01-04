@@ -7,7 +7,7 @@ from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from magrathea.main import get_db
+from magrathea.database import get_db
 from magrathea.maps.map import Map
 from magrathea.maps.rendering_engine import render_map_to_buffer
 
