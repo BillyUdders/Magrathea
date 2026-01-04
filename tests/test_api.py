@@ -65,3 +65,12 @@ def test_create_and_get_map(client: TestClient) -> None:
 def test_get_nonexistent_map(client: TestClient) -> None:
     response = client.get("/maps/nonexistent-id")
     assert response.status_code == 404
+
+
+def test_favicon(client: TestClient) -> None:
+    response = client.get("/favicon.ico")
+    assert response.status_code == 200
+    assert response.headers["content-type"] in [
+        "image/vnd.microsoft.icon",
+        "image/x-icon",
+    ]
