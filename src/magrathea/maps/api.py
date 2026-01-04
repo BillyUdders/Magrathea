@@ -26,6 +26,28 @@ class MapResponse(BaseModel):
     url: str
 
 
+@map_router.get("/map", response_class=StreamingResponse)
+def quick_generate_map(
+    size: int = 128,
+    octaves: int = 4,
+    seed: int | None = None,
+    island_density: float = 0.0,
+) -> StreamingResponse:
+    """Generates and returns a map PNG directly (ephemeral, no DB storage)."""
+    logger.info(
+        f"GET /map: size={size}, octaves={octaves}, seed={seed}, "
+        f"density={island_density}"
+    )
+    try:
+        buf = render_map_to_buffer(
+            size, octaves, seed=seed, island_density=island_density
+        )
+        return StreamingResponse(buf, media_type="image/png")
+    except Exception as e:
+        logger.error(f"Failed to generate map: {e}")
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
 @map_router.post("/maps", response_model=MapResponse)
 def create_map(request: MapRequest, db: Session = Depends(get_db)) -> MapResponse:  # noqa: B008
     """Generates a map and stores it in the database."""

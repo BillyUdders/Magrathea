@@ -77,6 +77,13 @@ def test_create_map_with_density(client: TestClient) -> None:
     assert "url" in data
 
 
+def test_quick_generate_map(client: TestClient) -> None:
+    response = client.get("/map?size=64&octaves=2")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/png"
+    assert len(response.content) > 0
+
+
 def test_favicon(client: TestClient) -> None:
     response = client.get("/favicon.ico")
     assert response.status_code == 200
