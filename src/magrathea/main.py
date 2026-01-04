@@ -1,12 +1,14 @@
 import io
 
 import numpy as np
+from loguru import logger
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from perlin_noise import PerlinNoise
 
 
 def generate_heightmap(size, octaves):
+    logger.debug(f"Generating heightmap: size={size}, octaves={octaves}")
     noise = PerlinNoise(octaves=octaves)
     data = np.zeros((size, size))
 
@@ -32,15 +34,19 @@ def create_figure(heightmap):
 
 
 def render_map_to_png(size, octaves, filename):
+    logger.info(f"Rendering map to file: {filename} (size={size}, octaves={octaves})")
     heightmap = generate_heightmap(size, octaves)
     fig = create_figure(heightmap)
     FigureCanvasAgg(fig).print_png(filename)
+    logger.success(f"Map saved to {filename}")
 
 
 def render_map_to_buffer(size, octaves):
+    logger.info(f"Rendering map to buffer (size={size}, octaves={octaves})")
     heightmap = generate_heightmap(size, octaves)
     fig = create_figure(heightmap)
     output = io.BytesIO()
     FigureCanvasAgg(fig).print_png(output)
     output.seek(0)
+    logger.success("Map rendered to buffer")
     return output
