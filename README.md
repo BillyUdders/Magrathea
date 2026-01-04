@@ -54,6 +54,13 @@ Once the server is running, you can access the interactive API documentation at:
 6. Paste the `id` from the previous step into the `map_id` field.
 7. Click **Execute**. The response body will contain the generated image, and you can see a preview in the "Response body" section of Swagger.
 
+#### Quick Map Testing
+For immediate visual testing without database storage, use the `GET /map` endpoint:
+- **Endpoint**: `GET /map`
+- **Parameters**: `size` (int), `octaves` (int), `seed` (int), `island_density` (float)
+- **Example URL**: `http://127.0.0.1:8000/map?size=256&octaves=4&island_density=0.2&seed=123`
+- This directly returns the generated PNG image.
+
 ## Development
 
 ### Database Migrations (Alembic)

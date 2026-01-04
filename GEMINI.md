@@ -16,6 +16,11 @@ Magrathea is a Python-based map generation service. It uses FastAPI for the web 
 - `tests/`: Unit and integration tests.
 - `.github/workflows/`: Gemini-powered GitHub Actions for PR reviews, issue triage, and more.
 
+## Key Endpoints
+- `POST /maps`: Generate and store a new map (persisted in DB).
+- `GET /maps/{id}`: Retrieve a stored map by ID.
+- `GET /map`: Ephemeral map generation for quick testing (returns PNG directly, no DB storage).
+
 ## Development & Code Quality
 
 
