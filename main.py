@@ -29,5 +29,19 @@ def show_map():
     plt.show()
 
 
+def render_map_to_png(size, octaves, filename):
+    heightmap = generate_heightmap(size, octaves)
+
+    plt.figure(figsize=(6, 6))
+
+    plt.title("Perlin Noise Heightmap")
+    plt.imshow(heightmap, cmap="terrain", interpolation="nearest")
+    plt.colorbar(label="Height")
+    plt.axis("off")
+
+    plt.savefig(filename)
+    plt.close()
+
+
 if __name__ == "__main__":
     show_map()
