@@ -53,8 +53,6 @@ def test_create_and_get_map(client: TestClient) -> None:
     assert "id" in data
     assert "url" in data
 
-    print("hello")
-
     map_url = data["url"]
 
     # 2. Retrieve the map
