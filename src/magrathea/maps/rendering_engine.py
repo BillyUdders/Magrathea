@@ -8,6 +8,7 @@ from matplotlib.figure import Figure
 from noise import pnoise2
 
 
+# Candidate for garbage, this whole file needs TLC
 def generate_island_mask(size: int) -> np.ndarray:
     """Creates a circular gradient mask to force island generation."""
 
@@ -53,7 +54,7 @@ def generate_heightmap(
         for x in range(size):
             # Generate Perlin noise
             # We map 0..size to coordinates.
-            nx = (x + offset_x) / scale
+            nx = (x + offset_x) / scale + 20
             ny = (y + offset_y) / scale
 
             # Fetch noise value (typically -1.0 to 1.0)
