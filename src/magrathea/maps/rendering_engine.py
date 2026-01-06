@@ -1,11 +1,12 @@
 import io
 import random
+from typing import cast
 
 import numpy as np
 from loguru import logger
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
-from noise import pnoise2
+from opensimplex import OpenSimplex
 
 
 # Candidate for garbage, this whole file needs TLC
@@ -23,7 +24,7 @@ def generate_island_mask(size: int) -> np.ndarray:
     mask = 1 - np.clip(d, 0, 1)
     mask = mask * mask * (3 - 2 * mask)
 
-    return mask
+    return cast(np.ndarray, mask)
 
 
 def generate_heightmap(
@@ -41,46 +42,60 @@ def generate_heightmap(
     if seed is None:
         seed = random.randint(0, 10000)
 
-    random.seed(seed)
-    offset_x = random.randint(0, 100000)
-    offset_y = random.randint(0, 100000)
+    # Use a separate random generator for offsets to allow reproducible maps
+    # independent of global random state if seed is provided.
+    rng = random.Random(seed)
+    offset_x = rng.randint(0, 100000)
+    offset_y = rng.randint(0, 100000)
 
-    data = np.zeros((size, size))
+    # Initialize OpenSimplex with the seed
+    gen = OpenSimplex(seed=seed)
 
-    # Adjust scale relative to size to keep features looking similar across resolutions
-    # A larger scale value in pnoise2 means "zoomed in" (larger features)
-    # Actually pnoise2(x/scale) -> larger scale = lower frequency = larger features.
-    for y in range(size):
-        for x in range(size):
-            # Generate Perlin noise
-            # We map 0..size to coordinates.
-            nx = (x + offset_x) / scale + 20
-            ny = (y + offset_y) / scale
+    # Prepare coordinate arrays
+    # 0..size -> scaled coordinates
+    x_idx = np.arange(size)
+    y_idx = np.arange(size)
 
-            # Fetch noise value (typically -1.0 to 1.0)
-            val = pnoise2(
-                nx,
-                ny,
-                octaves=octaves,
-                persistence=0.5,
-                lacunarity=2.0,
-                repeatx=1024,
-                repeaty=1024,
-                base=0,
-            )
+    # Apply offsets and base scale
+    # Matches original logic: nx = (x + offset_x) / scale + 20
+    nx = (x_idx + offset_x) / scale + 20
+    ny = (y_idx + offset_y) / scale
 
-            # Normalize roughly to 0..1 (pnoise is -1..1)
-            # Add island_density to shift the landmass up or down
-            data[y][x] = (val + 1 + island_density) / 2
+    heightmap = np.zeros((size, size))
+    amplitude = 1.0
+    frequency = 1.0
+    max_value = 0.0
+
+    # Fractal Brownian Motion (FBM)
+    persistence = 0.5
+    lacunarity = 2.0
+
+    for _ in range(octaves):
+        # noise2array takes (x_array, y_array) and returns (len(y), len(x))
+        # We pass the scaled coordinates for this octave
+        noise_layer = gen.noise2array(nx * frequency, ny * frequency)
+
+        heightmap += noise_layer * amplitude
+        max_value += amplitude
+
+        amplitude *= persistence
+        frequency *= lacunarity
+
+    # Normalize roughly to -1..1
+    if max_value > 0:
+        heightmap /= max_value
+
+    # Shift and normalize to 0..1 range with density adjustment
+    # Original logic: (val + 1 + island_density) / 2
+    heightmap = (heightmap + 1 + island_density) / 2
 
     # Apply Island Mask
     mask = generate_island_mask(size)
 
     # Combine: Map = Noise * Mask
-    # This ensures the edges are always low (water) and center is high (land)
-    data = data * mask
+    data = heightmap * mask
 
-    return data
+    return cast(np.ndarray, data)
 
 
 def create_figure(heightmap: np.ndarray) -> Figure:
