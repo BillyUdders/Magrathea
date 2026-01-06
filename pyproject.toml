@@ -30,12 +30,14 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "basedpyright>=1.37.0",
     "ipywidgets>=8.1.8",
     "jupyterlab>=4.5.1",
     "mypy>=1.19.1",
     "prek>=0.2.25",
     "pytest>=9.0.2",
     "pytest-watcher>=0.6.2",
+    "yamlfix>=1.19.1",
 ]
 
 [tool.pytest.ini_options]
@@ -72,6 +74,11 @@ module = [
     "alembic.*"
 ]
 ignore_missing_imports = true
+
+[tool.basedpyright]
+pythonVersion = "3.13"
+typeCheckingMode = "basic"
+exclude = ["alembic"]
 
 [project.scripts]
 seed-maps = "magrathea.maps.seed_maps:cli"

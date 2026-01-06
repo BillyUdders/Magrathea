@@ -86,6 +86,12 @@ The hooks will run automatically on every commit. You can also run them manually
 uv run prek run --all-files
 ```
 
+### YAML Formatting
+To format YAML files, use `yamlfix`:
+```bash
+uv run yamlfix .
+```
+
 ### Type Checking
 To run static type checking with `mypy`:
 ```bash

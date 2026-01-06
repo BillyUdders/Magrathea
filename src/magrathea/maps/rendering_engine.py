@@ -25,8 +25,6 @@ def generate_island_mask(size: int) -> np.ndarray:
     mask = 1 - np.clip(d, 0, 1)
     mask = mask * mask * (3 - 2 * mask)
 
-    print("Hello Acheron")
-
     return cast(np.ndarray, mask)
 
 
@@ -99,9 +97,9 @@ def generate_heightmap(
     # mask = generate_island_mask(size)
 
     # Combine: Map = Noise * Mask
-    data = heightmap
+    data = cast(np.ndarray, heightmap)
 
-    return cast(np.ndarray, data)
+    return data
 
 
 def create_figure(heightmap: np.ndarray) -> Figure:
@@ -158,6 +156,7 @@ def render_map_to_buffer(
         f"Rendering map to buffer (size={size}, octaves={octaves}, "
         f"seed={seed}, density={island_density})"
     )
+
     heightmap = generate_heightmap(
         size, octaves, scale=size / 4, seed=seed, island_density=island_density
     )
@@ -165,5 +164,6 @@ def render_map_to_buffer(
     output = io.BytesIO()
     FigureCanvasAgg(fig).print_png(output)
     output.seek(0)
+
     logger.success("Map rendered to buffer")
     return output

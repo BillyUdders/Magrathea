@@ -41,6 +41,14 @@ We use [Ruff](https://docs.astral.sh/ruff/) for extremely fast linting and forma
 
 
 
+### YAML Formatting (yamlfix)
+
+We use [yamlfix](https://github.com/lyz-code/yamlfix) for formatting YAML files.
+
+- **Format YAML**: `uv run yamlfix .`
+
+
+
 ### Static Type Checking (Mypy)
 
 We use [Mypy](https://mypy.readthedocs.io/) for static type hints.
@@ -93,7 +101,7 @@ We use `pytest` for testing.
 
 When assisting with this repository:
 
-1.  **Always Format**: After modifying Python files, run `ruff format` and `ruff check --fix`.
+1.  **Always Format**: After modifying Python files, run `ruff format` and `ruff check --fix`. For YAML files, run `yamlfix .`.
 
 2.  **Verify Types**: Run `mypy` to ensure no type regressions were introduced.
 
