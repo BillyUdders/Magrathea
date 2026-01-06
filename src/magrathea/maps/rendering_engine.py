@@ -5,6 +5,7 @@ from typing import cast
 import numpy as np
 from loguru import logger
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.figure import Figure
 from opensimplex import OpenSimplex
 
@@ -33,6 +34,7 @@ def generate_heightmap(
     scale: float = 100.0,
     seed: int | None = None,
     island_density: float = 0.0,
+    # float: water_level = 0.4
 ) -> np.ndarray:
     logger.debug(
         f"Generating heightmap: size={size}, octaves={octaves}, seed={seed}, "
@@ -89,11 +91,13 @@ def generate_heightmap(
     # Original logic: (val + 1 + island_density) / 2
     heightmap = (heightmap + 1 + island_density) / 2
 
+    heightmap = np.round(heightmap / 0.05) * 0.05
+
     # Apply Island Mask
-    mask = generate_island_mask(size)
+    # mask = generate_island_mask(size)
 
     # Combine: Map = Noise * Mask
-    data = heightmap * mask
+    data = heightmap
 
     return cast(np.ndarray, data)
 
@@ -103,9 +107,21 @@ def create_figure(heightmap: np.ndarray) -> Figure:
     ax = fig.subplots()
 
     ax.set_title("Island Map")
+
+    colors = [
+        (0.0, "#1f4fff"),  # blue (deep water)
+        (0.4, "#1f4fff"),  # blue (deep water)
+        (0.5, "#f5e663"),  # yellow (sand)
+        (0.55, "#4caf50"),  # green (grass)
+        (0.8, "#0b3d0b"),  # dark green (dense forest)
+        (1.0, "#0b3d0b"),  # dark green (dense forest)
+    ]
+
+    sea_sand_grass = LinearSegmentedColormap.from_list("sea_sand_grass", colors, N=256)
+
     # 'terrain' colormap works well: Blue -> Green -> Brown -> White
     # We assume < 0.2 is deep water, < 0.4 shallow water, > 0.4 land
-    ax.imshow(heightmap, cmap="terrain", interpolation="bilinear", vmin=0, vmax=1)
+    ax.imshow(heightmap, cmap=sea_sand_grass, interpolation="bilinear", vmin=0, vmax=1)
     fig.colorbar(ax.images[0], ax=ax, label="Elevation")
     ax.axis("off")
     return fig
