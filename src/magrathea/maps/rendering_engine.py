@@ -25,6 +25,8 @@ def generate_island_mask(size: int) -> np.ndarray:
     mask = 1 - np.clip(d, 0, 1)
     mask = mask * mask * (3 - 2 * mask)
 
+    print("Hello Acheron")
+
     return cast(np.ndarray, mask)
 
 
