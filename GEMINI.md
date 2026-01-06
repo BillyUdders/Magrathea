@@ -6,7 +6,7 @@ Magrathea is a Python-based map generation service. It uses FastAPI for the web 
 - **Python 3.13+**
 - **FastAPI**: Web framework for the API.
 - **SQLAlchemy**: ORM for database interactions.
-- **Noise/Perlin Noise**: Used for procedural map generation.
+- **Noise/Perlin Noise (OpenSimplex)**: Used for procedural map generation.
 - **Matplotlib/Pillow**: Used for rendering maps.
 - **uv**: Modern Python package manager and runner.
 
@@ -14,7 +14,12 @@ Magrathea is a Python-based map generation service. It uses FastAPI for the web 
 - `src/magrathea/`: Main source code.
 - `src/magrathea/maps/`: Core logic for map generation and rendering.
 - `tests/`: Unit and integration tests.
+- `notebooks/`: Jupyter notebooks for experimentation and visualization.
 - `.github/workflows/`: Gemini-powered GitHub Actions for PR reviews, issue triage, and more.
+
+## Map Generation
+- **Algorithms**: Implemented using OpenSimplex noise (via `opensimplex`) and Fractal Brownian Motion (FBM).
+- **Location**: See `src/magrathea/maps/rendering_engine.py` for noise generation and heightmap logic.
 
 ## Key Endpoints
 - `POST /maps`: Generate and store a new map (persisted in DB).

@@ -61,6 +61,22 @@ For immediate visual testing without database storage, use the `GET /map` endpoi
 - **Example URL**: `http://127.0.0.1:8000/map?size=256&octaves=4&island_density=0.2&seed=123`
 - This directly returns the generated PNG image.
 
+## Map Generation Algorithms
+
+The core of Magrathea's map generation lies in procedural noise algorithms.
+
+-   **OpenSimplex Noise**: We use the `opensimplex` library to generate smooth, continuous noise for heightmaps. This provides a natural-looking terrain base.
+-   **Fractal Brownian Motion (FBM)**: Multiple layers (octaves) of noise are combined to create detail at different scales (mountains, hills, rough terrain).
+-   **Implementation**: The generation logic can be found in [`src/magrathea/maps/rendering_engine.py`](src/magrathea/maps/rendering_engine.py).
+
+## Development Notebooks
+
+Interactive notebooks are provided for experimenting with map parameters and visualizing results immediately.
+
+-   **Location**: [`notebooks/`](notebooks/)
+-   **Playground**: `notebooks/playground.ipynb` is the main entry point for testing rendering logic.
+-   **Usage**: Run `uv run jupyter lab` to start the notebook server.
+
 ## Development
 
 ### Database Migrations (Alembic)
