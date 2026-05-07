@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Map Form{% endblock%}
+
+{% block content %}
+<h2>Map Request</h2>
+<div x-data="widgetForm()">
+    <form @submit.prevent="submit">
+        <input x-model.number="form.size" type="number" placeholder="Size" />
+        <input x-model.number="form.seed_height" type="number" placeholder="Height Seed" />
+        <input x-model.number="form.seed_heat" type="number" placeholder="Temperature Seed"" />
+        <input x-model.number=" form.seed_wet" type="number" placeholder="Hydration Seed"" />
+
+        <button type=" submit">Create</button>
+    </form>
+
+    <!-- feedback -->
+    <template x-if="loading">
+        <p>Saving...</p>
+    </template>
+
+    <template x-if="error">
+        <p style="color:red" x-text="error"></p>
+    </template>
+
+    <template x-if="result">
+        <pre x-html="result"></pre>
+    </template>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    function widgetForm() {
+        return {
+            form: {
+                size: 256,
+                seed_height: 1,
+                seed_heat: 1,
+                seed_wet: 1
+            },
+            loading: false,
+            error: null,
+            result: null,
+
+            async submit() {
+                this.loading = true;
+                this.error = null;
+
+                try {
+                    const res = await fetch("/map_create", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(this.form)
+                    }
+                    );
+
+                    if (!res.ok) {
+                        throw new Error("Request failed");
+                    }
+
+                    this.result = await res;
+                } catch (e) {
+                    this.error = e.message;
+                } finally {
+                    this.loading = false;
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
